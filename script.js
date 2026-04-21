@@ -37,6 +37,7 @@ const prevBtn = document.getElementById("prev");
 function loadSong(index){
   const song = songs[index];
   audio.src = song.src;
+  audio.load();
   title.textContent = song.name;
   deck.className = "deck " + song.class;
   progress.value = 0;
@@ -46,38 +47,46 @@ function updateUI(){
   if(audio.paused){
     vinyl.classList.remove("spin");
     arm.classList.remove("active");
+    playBtn.textContent = "▶";
   } else {
     vinyl.classList.add("spin");
     arm.classList.add("active");
+    playBtn.textContent = "⏸";
   }
 }
 
-playBtn.onclick = async () => {
+playBtn.addEventListener("click", async () => {
   if(!audio.src) loadSong(i);
   if(audio.paused){
     await audio.play().catch(()=>{});
   } else {
     audio.pause();
   }
-};
+});
 
-nextBtn.onclick = async () => {
-  i = (i+1) % songs.length;
+nextBtn.addEventListener("click", async () => {
+  i = (i + 1) % songs.length;
   loadSong(i);
   await audio.play().catch(()=>{});
-};
+});
 
-prevBtn.onclick = async () => {
-  i = (i-1+songs.length) % songs.length;
+prevBtn.addEventListener("click", async () => {
+  i = (i - 1 + songs.length) % songs.length;
   loadSong(i);
   await audio.play().catch(()=>{});
-};
+});
 
-audio.onplay = updateUI;
-audio.onpause = updateUI;
+audio.addEventListener("play", updateUI);
+audio.addEventListener("pause", updateUI);
 
-audio.ontimeupdate = () => {
+audio.addEventListener("ended", async () => {
+  i = (i + 1) % songs.length;
+  loadSong(i);
+  await audio.play().catch(()=>{});
+});
+
+audio.addEventListener("timeupdate", () => {
   if(audio.duration){
     progress.value = (audio.currentTime / audio.duration) * 100;
   }
-};
+});
