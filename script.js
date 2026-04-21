@@ -1,189 +1,92 @@
-*{
-  box-sizing:border-box;
+const songs = [
+  {
+    name: "1 - Chill",
+    src: "https://lambda.vgmtreasurechest.com/soundtracks/restaurant-tycoon-2-roblox-gamerip-2021/bchfeelt/01.%20Classical.mp3",
+    class: "chill"
+  },
+  {
+    name: "2 - Restaurant",
+    src: "https://lambda.vgmtreasurechest.com/soundtracks/restaurant-tycoon-2-roblox-gamerip-2021/adomsbgb/08.%20Slow%20Piano.mp3",
+    class: "restaurant"
+  },
+  {
+    name: "3 - Ocean 🌊",
+    src: "https://nu.vgmtreasurechest.com/soundtracks/fortnite-music-packs-gamerip-2017/iyrrfbre/1-08.%20Coral%20Chorus.mp3",
+    class: "ocean"
+  },
+  {
+    name: "4 - Minecraft",
+    src: "https://archive.org/download/08-minecraft_202302/08%20-%20Minecraft.mp3",
+    class: "minecraft"
+  }
+];
+
+let i = 0;
+
+const audio = document.getElementById("audio");
+const title = document.getElementById("title");
+const vinyl = document.getElementById("vinyl");
+const arm = document.getElementById("arm");
+const deck = document.getElementById("deck");
+const progress = document.getElementById("progress");
+
+const playBtn = document.getElementById("play");
+const nextBtn = document.getElementById("next");
+const prevBtn = document.getElementById("prev");
+
+function loadSong(index){
+  const song = songs[index];
+  audio.src = song.src;
+  audio.load();
+  title.textContent = song.name;
+  deck.className = "deck " + song.class;
+  progress.value = 0;
 }
 
-body{
-  margin:0;
-  height:100vh;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  background:#050505;
-  font-family:Arial;
+/* FORCE SPIN UPDATE */
+function updateUI(){
+  if(audio.paused){
+    vinyl.classList.remove("spin");
+    arm.classList.remove("active");
+    playBtn.textContent = "▶";
+  } else {
+    vinyl.classList.add("spin");
+    arm.classList.add("active");
+    playBtn.textContent = "⏸";
+  }
 }
 
-.player{
-  text-align:center;
-}
+playBtn.onclick = async () => {
+  if(!audio.src) loadSong(i);
 
-.controls{
-  margin-bottom:20px;
-}
+  if(audio.paused){
+    await audio.play().catch(()=>{});
+  } else {
+    audio.pause();
+  }
 
-button{
-  margin:0 10px;
-  padding:10px 14px;
-  border:none;
-  border-radius:10px;
-  background:linear-gradient(#222,#000);
-  color:white;
-  font-size:18px;
-  cursor:pointer;
-  box-shadow:0 0 12px rgba(255,0,0,0.4);
-  transition:all 0.2s ease;
-}
+  updateUI(); // 🔥 FORCE update
+};
 
-button:hover{
-  transform:scale(1.1);
-  box-shadow:0 0 18px rgba(255,0,0,0.8);
-}
+nextBtn.onclick = async () => {
+  i = (i+1) % songs.length;
+  loadSong(i);
+  await audio.play().catch(()=>{});
+  updateUI();
+};
 
-/* DECK */
-.deck{
-  position:relative;
-  width:320px;
-  height:300px;
-  border-radius:20px;
-  background:linear-gradient(145deg,#141414,#080808);
-  box-shadow:
-    inset 0 0 30px rgba(0,0,0,0.9),
-    0 20px 60px rgba(0,0,0,0.9);
-  display:flex;
-  justify-content:center;
-  align-items:center;
-}
+prevBtn.onclick = async () => {
+  i = (i-1+songs.length) % songs.length;
+  loadSong(i);
+  await audio.play().catch(()=>{});
+  updateUI();
+};
 
-.deck::after{
-  content:"";
-  position:absolute;
-  width:260px;
-  height:260px;
-  border-radius:50%;
-  filter:blur(40px);
-  opacity:0.5;
-  z-index:-1;
-  animation:pulse 2s infinite alternate;
-}
+audio.onplay = updateUI;
+audio.onpause = updateUI;
 
-/* GLOW */
-.deck.chill::after{ background:radial-gradient(circle,#a855f7,transparent); }
-.deck.restaurant::after{ background:radial-gradient(circle,#facc15,transparent); }
-.deck.ocean::after{ background:radial-gradient(circle,#38bdf8,transparent); }
-.deck.minecraft::after{ background:radial-gradient(circle,#22c55e,transparent); }
-
-@keyframes pulse{
-  from{transform:scale(1);}
-  to{transform:scale(1.25);}
-}
-
-/* PLATTER */
-.platter{
-  width:230px;
-  height:230px;
-  border-radius:50%;
-  background:radial-gradient(circle,#555,#111);
-  display:flex;
-  justify-content:center;
-  align-items:center;
-}
-
-/* VINYL (REALISTIC) */
-.vinyl{
-  width:190px;
-  height:190px;
-  border-radius:50%;
-  position:relative;
-
-  background:
-    radial-gradient(circle at center,#111 0%,#000 65%),
-    repeating-radial-gradient(circle,#000 0px,#000 2px,#111 3px);
-
-  box-shadow:
-    inset 0 0 30px rgba(0,0,0,1),
-    0 0 20px rgba(0,0,0,0.8);
-
-  overflow:hidden;
-}
-
-/* SHINE BUILT INTO VINYL (SO IT SPINS WITH IT) */
-.vinyl::before{
-  content:"";
-  position:absolute;
-  inset:0;
-  border-radius:50%;
-  background:conic-gradient(
-    rgba(255,255,255,0.25),
-    transparent 40%,
-    transparent 70%,
-    rgba(255,255,255,0.15)
-  );
-  mix-blend-mode:screen;
-}
-
-/* SPIN */
-.spin{
-  animation:spin 1.8s linear infinite;
-}
-
-@keyframes spin{
-  from{transform:rotate(0deg);}
-  to{transform:rotate(360deg);}
-}
-
-/* CENTER LABEL (MORE REALISTIC) */
-.label{
-  position:absolute;
-  width:60px;
-  height:60px;
-  border-radius:50%;
-  top:50%;
-  left:50%;
-  transform:translate(-50%,-50%);
-
-  background:
-    radial-gradient(circle,#ff4444,#990000);
-
-  box-shadow:
-    inset 0 0 10px rgba(0,0,0,0.7),
-    0 0 15px rgba(255,0,0,0.6);
-}
-
-/* ARM */
-.arm{
-  position:absolute;
-  width:160px;
-  height:6px;
-  background:linear-gradient(#eee,#777);
-  top:55px;
-  right:-60px;
-  transform-origin:left center;
-  transform:rotate(25deg);
-  transition:transform 0.3s ease;
-  border-radius:4px;
-}
-
-/* NEEDLE */
-.head{
-  position:absolute;
-  right:-12px;
-  top:-5px;
-  width:22px;
-  height:16px;
-  background:linear-gradient(#ccc,#888);
-  border-radius:4px;
-  box-shadow:0 0 6px rgba(0,0,0,0.6);
-}
-
-.arm.active{
-  transform:rotate(5deg);
-}
-
-#title{
-  color:white;
-  margin-top:20px;
-}
-
-#progress{
-  width:300px;
-  margin-top:12px;
-}
+audio.ontimeupdate = () => {
+  if(audio.duration){
+    progress.value = (audio.currentTime / audio.duration) * 100;
+  }
+};
