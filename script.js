@@ -16,7 +16,7 @@ const songs = [
   },
   {
     name: "4 - Minecraft",
-    src: "https://dn710204.ca.archive.org/0/items/08-minecraft_202302/08%20-%20Minecraft.mp3",
+    src: "https://archive.org/download/08-minecraft_202302/08%20-%20Minecraft.mp3",
     class: "minecraft"
   }
 ];
@@ -34,12 +34,9 @@ const playBtn = document.getElementById("play");
 const nextBtn = document.getElementById("next");
 const prevBtn = document.getElementById("prev");
 
-audio.preload = "auto";
-
 function loadSong(index){
   const song = songs[index];
   audio.src = song.src;
-  audio.load();
   title.textContent = song.name;
   deck.className = "deck " + song.class;
   progress.value = 0;
@@ -49,48 +46,38 @@ function updateUI(){
   if(audio.paused){
     vinyl.classList.remove("spin");
     arm.classList.remove("active");
-    playBtn.textContent = "▶";
   } else {
     vinyl.classList.add("spin");
     arm.classList.add("active");
-    playBtn.textContent = "⏸";
   }
 }
 
-playBtn.addEventListener("click", async () => {
-  try {
-    if(!audio.src) loadSong(i);
-    if(audio.paused){
-      await audio.play();
-    } else {
-      audio.pause();
-    }
-  } catch(e){}
-});
+playBtn.onclick = async () => {
+  if(!audio.src) loadSong(i);
+  if(audio.paused){
+    await audio.play().catch(()=>{});
+  } else {
+    audio.pause();
+  }
+};
 
-nextBtn.addEventListener("click", async () => {
-  i = (i + 1) % songs.length;
+nextBtn.onclick = async () => {
+  i = (i+1) % songs.length;
   loadSong(i);
-  try { await audio.play(); } catch(e){}
-});
+  await audio.play().catch(()=>{});
+};
 
-prevBtn.addEventListener("click", async () => {
-  i = (i - 1 + songs.length) % songs.length;
+prevBtn.onclick = async () => {
+  i = (i-1+songs.length) % songs.length;
   loadSong(i);
-  try { await audio.play(); } catch(e){}
-});
+  await audio.play().catch(()=>{});
+};
 
-audio.addEventListener("play", updateUI);
-audio.addEventListener("pause", updateUI);
+audio.onplay = updateUI;
+audio.onpause = updateUI;
 
-audio.addEventListener("ended", async () => {
-  i = (i + 1) % songs.length;
-  loadSong(i);
-  try { await audio.play(); } catch(e){}
-});
-
-audio.addEventListener("timeupdate", () => {
+audio.ontimeupdate = () => {
   if(audio.duration){
     progress.value = (audio.currentTime / audio.duration) * 100;
   }
-});
+};
