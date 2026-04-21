@@ -30,12 +30,6 @@ button{
   font-size:18px;
   cursor:pointer;
   box-shadow:0 0 12px rgba(255,0,0,0.4);
-  transition:all 0.2s ease;
-}
-
-button:hover{
-  transform:scale(1.1);
-  box-shadow:0 0 18px rgba(255,0,0,0.8);
 }
 
 /* DECK */
@@ -45,14 +39,12 @@ button:hover{
   height:300px;
   border-radius:20px;
   background:linear-gradient(145deg,#141414,#080808);
-  box-shadow:
-    inset 0 0 30px rgba(0,0,0,0.9),
-    0 20px 60px rgba(0,0,0,0.9);
   display:flex;
   justify-content:center;
   align-items:center;
 }
 
+/* GLOW */
 .deck::after{
   content:"";
   position:absolute;
@@ -60,20 +52,12 @@ button:hover{
   height:260px;
   border-radius:50%;
   filter:blur(40px);
-  opacity:0.5;
+  opacity:0.6;
   z-index:-1;
-  animation:pulse 2s infinite alternate;
 }
 
-/* GLOW */
-.deck.chill::after{ background:radial-gradient(circle,#a855f7,transparent); }
-.deck.restaurant::after{ background:radial-gradient(circle,#facc15,transparent); }
-.deck.ocean::after{ background:radial-gradient(circle,#38bdf8,transparent); }
-.deck.minecraft::after{ background:radial-gradient(circle,#22c55e,transparent); }
-
-@keyframes pulse{
-  from{transform:scale(1);}
-  to{transform:scale(1.25);}
+.deck.minecraft::after{
+  background:radial-gradient(circle,#22c55e,transparent);
 }
 
 /* PLATTER */
@@ -81,13 +65,13 @@ button:hover{
   width:230px;
   height:230px;
   border-radius:50%;
-  background:radial-gradient(circle,#555,#111);
+  background:radial-gradient(circle,#444,#111);
   display:flex;
   justify-content:center;
   align-items:center;
 }
 
-/* VINYL (REALISTIC) */
+/* VINYL */
 .vinyl{
   width:190px;
   height:190px;
@@ -95,34 +79,34 @@ button:hover{
   position:relative;
 
   background:
-    radial-gradient(circle at center,#111 0%,#000 65%),
-    repeating-radial-gradient(circle,#000 0px,#000 2px,#111 3px);
+    repeating-radial-gradient(circle,#000 0px,#000 2px,#111 3px),
+    radial-gradient(circle,#111,#000);
 
   box-shadow:
     inset 0 0 30px rgba(0,0,0,1),
     0 0 20px rgba(0,0,0,0.8);
 
-  overflow:hidden;
+  transform:rotate(0deg);
 }
 
-/* SHINE BUILT INTO VINYL (SO IT SPINS WITH IT) */
+/* REAL LIGHT REFLECTION (SPINS WITH VINYL) */
 .vinyl::before{
   content:"";
   position:absolute;
   inset:0;
   border-radius:50%;
+
   background:conic-gradient(
-    rgba(255,255,255,0.25),
-    transparent 40%,
+    rgba(255,255,255,0.35),
+    transparent 30%,
     transparent 70%,
-    rgba(255,255,255,0.15)
+    rgba(255,255,255,0.2)
   );
-  mix-blend-mode:screen;
 }
 
 /* SPIN */
 .spin{
-  animation:spin 1.8s linear infinite;
+  animation:spin 1.2s linear infinite;
 }
 
 @keyframes spin{
@@ -130,7 +114,7 @@ button:hover{
   to{transform:rotate(360deg);}
 }
 
-/* CENTER LABEL (MORE REALISTIC) */
+/* CENTER LABEL */
 .label{
   position:absolute;
   width:60px;
@@ -139,13 +123,22 @@ button:hover{
   top:50%;
   left:50%;
   transform:translate(-50%,-50%);
+  background:radial-gradient(circle,#ff4444,#880000);
+  box-shadow:inset 0 0 10px black;
+}
 
-  background:
-    radial-gradient(circle,#ff4444,#990000);
-
-  box-shadow:
-    inset 0 0 10px rgba(0,0,0,0.7),
-    0 0 15px rgba(255,0,0,0.6);
+/* SPINDLE (THE KNOB YOU WANTED) */
+.label::after{
+  content:"";
+  position:absolute;
+  width:10px;
+  height:10px;
+  background:#ccc;
+  border-radius:50%;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  box-shadow:0 0 4px white;
 }
 
 /* ARM */
@@ -158,32 +151,19 @@ button:hover{
   right:-60px;
   transform-origin:left center;
   transform:rotate(25deg);
-  transition:transform 0.3s ease;
-  border-radius:4px;
+  transition:0.3s;
 }
 
-/* NEEDLE */
 .head{
   position:absolute;
   right:-12px;
   top:-5px;
   width:22px;
   height:16px;
-  background:linear-gradient(#ccc,#888);
-  border-radius:4px;
-  box-shadow:0 0 6px rgba(0,0,0,0.6);
+  background:#bbb;
+  border-radius:3px;
 }
 
 .arm.active{
   transform:rotate(5deg);
-}
-
-#title{
-  color:white;
-  margin-top:20px;
-}
-
-#progress{
-  width:300px;
-  margin-top:12px;
 }
