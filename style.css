@@ -65,7 +65,7 @@ button:hover{
   animation:pulse 2s infinite alternate;
 }
 
-/* GLOW COLORS */
+/* GLOW */
 .deck.chill::after{ background:radial-gradient(circle,#a855f7,transparent); }
 .deck.restaurant::after{ background:radial-gradient(circle,#facc15,transparent); }
 .deck.ocean::after{ background:radial-gradient(circle,#38bdf8,transparent); }
@@ -87,33 +87,37 @@ button:hover{
   align-items:center;
 }
 
-/* VINYL */
+/* VINYL (REALISTIC) */
 .vinyl{
   width:190px;
   height:190px;
   border-radius:50%;
-  background:
-    radial-gradient(circle at center,#111 0%,#000 60%),
-    repeating-radial-gradient(circle,#000 0px,#000 2px,#111 3px);
-  box-shadow:
-    inset 0 0 25px rgba(0,0,0,0.9),
-    0 0 20px rgba(0,0,0,0.8);
   position:relative;
+
+  background:
+    radial-gradient(circle at center,#111 0%,#000 65%),
+    repeating-radial-gradient(circle,#000 0px,#000 2px,#111 3px);
+
+  box-shadow:
+    inset 0 0 30px rgba(0,0,0,1),
+    0 0 20px rgba(0,0,0,0.8);
+
+  overflow:hidden;
 }
 
-/* SHINY SWEEP */
-.vinyl::after{
+/* SHINE BUILT INTO VINYL (SO IT SPINS WITH IT) */
+.vinyl::before{
   content:"";
   position:absolute;
   inset:0;
   border-radius:50%;
-  background:linear-gradient(120deg,transparent,rgba(255,255,255,0.25),transparent);
-  animation:shine 3s linear infinite;
-}
-
-@keyframes shine{
-  from{transform:rotate(0deg);}
-  to{transform:rotate(360deg);}
+  background:conic-gradient(
+    rgba(255,255,255,0.25),
+    transparent 40%,
+    transparent 70%,
+    rgba(255,255,255,0.15)
+  );
+  mix-blend-mode:screen;
 }
 
 /* SPIN */
@@ -126,20 +130,25 @@ button:hover{
   to{transform:rotate(360deg);}
 }
 
-/* LABEL */
+/* CENTER LABEL (MORE REALISTIC) */
 .label{
   position:absolute;
-  width:55px;
-  height:55px;
-  background:#c00;
+  width:60px;
+  height:60px;
   border-radius:50%;
   top:50%;
   left:50%;
   transform:translate(-50%,-50%);
-  box-shadow:0 0 15px rgba(255,0,0,0.7);
+
+  background:
+    radial-gradient(circle,#ff4444,#990000);
+
+  box-shadow:
+    inset 0 0 10px rgba(0,0,0,0.7),
+    0 0 15px rgba(255,0,0,0.6);
 }
 
-/* REALISTIC ARM */
+/* ARM */
 .arm{
   position:absolute;
   width:160px;
